@@ -1,7 +1,10 @@
+'use client'
 import Image from "next/image";
 import styles from "./page.module.css";
+import {useSession,getSession} from "next-auth/react";
 
 export default function Home() {
+  const { data } = useSession()
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -15,7 +18,7 @@ export default function Home() {
         />
         <ol>
           <li>
-            Get started by editing <code>src/app/page.tsx</code>.
+            {data?.user?.name}
           </li>
           <li>Save and see your changes instantly.</li>
         </ol>
