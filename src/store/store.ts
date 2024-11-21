@@ -1,13 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit'
 import {registrationApi} from "@/store/features/registration/registration";
+import notesReducer from "@/store/features/notes/notesSlice";
+import prioritiesSlice from "@/store/features/priorities/prioritiesSlice";
+import {notesApi} from "@/store/features/notes/notesApiSlice";
 
 export const makeStore=()=>{
     return configureStore({
         reducer: {
-            [registrationApi.reducerPath]: registrationApi.reducer
+            [registrationApi.reducerPath]: registrationApi.reducer,
+            [notesApi.reducerPath]: notesApi.reducer,
+            notes:notesReducer,
+            priorities:prioritiesSlice
         },
         middleware: getDefaultMiddleware =>
-            getDefaultMiddleware().concat(registrationApi.middleware),
+            getDefaultMiddleware().concat(registrationApi.middleware,notesApi.middleware),
     })
 }
 

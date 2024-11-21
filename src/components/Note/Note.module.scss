@@ -16,3 +16,25 @@
     gap: 5px;
   }
 }
+.btns{
+  display: flex;
+  justify-content: end;
+  gap: 15px;
+  height: 30px;
+}
+.changeBtn,.deleteBtn{
+  background-color: transparent;
+  &>img{
+    width: 25px;
+    height: 25px;
+    transition: all ease 0.2s;
+  }
+  &:hover{
+    &>img{
+      width: 35px;
+      height: 35px;
+    }
+  }
+}
+.deleteBtn{
+}

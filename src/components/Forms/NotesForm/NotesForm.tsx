@@ -2,38 +2,48 @@
 import {FC, useEffect} from 'react'
 import {useSignUpMutation} from "@/store/features/registration/registration";
 import {SubmitHandler, useForm} from "react-hook-form";
-import {UserDto} from "@/types/dto";
+import {NotesCreateDto, NotesDto, NotesUpdateDto, UserDto} from "@/types/dto";
 import styles from '../Form.module.scss'
 import {getMessageFromError} from "@/helpers/errorPredicates";
 import clsx from "clsx";
 import {useRouter} from "next/navigation";
+import {useSelector} from "react-redux";
+import {selectNotes} from "@/store/features/notes/notesSlice";
+import {selectPriorities} from "@/store/features/priorities/prioritiesSlice";
 
-const RegisterForm:FC = () => {
-    const [regMutate,{error,status,isSuccess,isError}] = useSignUpMutation()
-    const { register, handleSubmit,formState: { errors } } = useForm<UserDto>();
-    const onSubmit: SubmitHandler<UserDto> =async (data) => {
-        try{await regMutate(data).unwrap();}
-        catch (e){}
+interface props{
+    isCreate:boolean,
+    note?:NotesDto,
+    createNote:(note:NotesCreateDto)=>void,
+    updateNote:(note:NotesUpdateDto)=>void,
+}
+// ...(!isCreate&& {defaultValues:note})
+
+const NotesForm:FC<props> = ({createNote,isCreate,updateNote,note}) => {
+    const defaultVal = isCreate?null:note;
+    const { register, handleSubmit,formState: { errors } } = useForm<NotesCreateDto>({defaultValues:defaultVal});
+
+    const {priorities} = useSelector(selectPriorities)
+    const onSubmit: SubmitHandler<NotesCreateDto> =async (data) => {
+        data.prioritiesId = parseInt(data.prioritiesId.toString())
+        if(isCreate)
+            createNote(data)
+        else if(note)
+            updateNote({...data,id:note.id})
     }
-    const router = useRouter()
-
-    useEffect(()=>{
-        if(isSuccess)router.push('/sign-in')
-    },[isSuccess])
     return (
-        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-            <h2 className='title'>Регистрация</h2>
+        <form className={clsx(styles.form,styles.NoteForm)} onSubmit={handleSubmit(onSubmit)}>
+            <h2 className='title'>{isCreate?'Добавить заметку':'Изменить заметку'}</h2>
             <div className={styles.formBody}>
-                <p className={styles.error}>{errors.nickname?.message||errors.login?.message||errors.password?.message} {getMessageFromError(error)} </p>
-                <input className='input' placeholder='Имя'
-                       type='nickname' {...register("nickname", {required: true,minLength:{value:6,message:'Никнейм должен быть не меньше 6 символов'}})} />
-                <input className='input' placeholder='Логин'
-                       type='text' {...register("login", {required: true,minLength:{value:6,message:'Логин должен быть не меньше 6 символов'}})} />
-                <input className='input' placeholder='Пароль'
-                       type='password'  {...register("password", {required: true,minLength:{value:6,message:'Пароль должен быть не меньше 6 символов'}})} />
-                <input type="submit" className={clsx('button',styles.formBtn)} value='зарегистрироваться'/>
+                <input className='input' placeholder='Заметка' type='nickname' {...register("text", {required: true})} />
+                <select {...register("prioritiesId", {required: true})}>
+                    {priorities.map((prioritet)=> {
+                        return <option key={prioritet.id} value={prioritet.id}>{prioritet.name}</option>
+                    })}
+                </select>
+                <input type="submit" className={clsx('button',styles.formBtn)} value={isCreate?'Добавить заметку':'Изменить заметку'}/>
             </div>
         </form>
     )
 };
-export default RegisterForm;
+export default NotesForm;

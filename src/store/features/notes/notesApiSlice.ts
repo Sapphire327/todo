@@ -1,14 +1,21 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import {UserDto} from "@/types/dto";
+import {NotesCreateDto, NotesUpdateDto} from "@/types/dto";
 
-export const registrationApi = createApi({
-    reducerPath: 'registrationApi',
+export const notesApi = createApi({
+    reducerPath: 'notesApi',
     baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXTAUTH_SECRET }),
     endpoints: (builder) => ({
-        signUp: builder.mutation<void, UserDto>({
+        createNote: builder.mutation<void, NotesCreateDto>({
             query:dto=>({
-                url:'/api/registration',
+                url:'/api/notes',
                 method:'POST',
+                body:{...dto},
+            })
+        }),
+        updateNote: builder.mutation<void, NotesUpdateDto>({
+            query:dto=>({
+                url:'/api/notes',
+                method:'PUT',
                 body:{...dto},
             })
         }),
@@ -17,4 +24,4 @@ export const registrationApi = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useSignUpMutation } = registrationApi
+export const {  useCreateNoteMutation,useUpdateNoteMutation} = notesApi

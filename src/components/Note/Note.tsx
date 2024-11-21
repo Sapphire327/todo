@@ -2,11 +2,14 @@ import { FC } from 'react'
 import {Notes} from "@prisma/client";
 import styles from './Note.module.scss'
 import {NotesDto} from "@/types/dto";
+import Image from "next/image";
 interface props{
     note:NotesDto
+    updateNote:(index:number)=>void
+    index:number
 }
 
-const Note:FC<props> = ({note}) => {
+const Note:FC<props> = ({note,updateNote,index}) => {
     return (
         <div className={styles.note}>
             <p className={styles.text}>{note.text}</p>
@@ -17,6 +20,10 @@ const Note:FC<props> = ({note}) => {
                     month: 'long',
                     day: 'numeric'
                 })}</p>
+                <div className={styles.btns}>
+                    <button onClick={()=>{updateNote(index)}} className={styles.changeBtn}><Image width={24} height={24} src={'/icons/pencil-icon.svg'} alt={'Изменить'}/></button>
+                    <button className={styles.deleteBtn}><Image width={24} height={24} src={'/icons/delete.svg'} alt={'Удалить'}/></button>
+                </div>
             </div>
         </div>
     )

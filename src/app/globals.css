@@ -18,6 +18,7 @@ h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight: inherit;}
 .container{
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 20px;
 }
 body{
     /*background:linear-gradient(#ffffff, #e3e7ff);*/
@@ -29,7 +30,7 @@ body{
     border-radius: 10px;
     color: white;
     transition: all 300ms ease;
-    border: 4px solid white;
+    border: 4px solid rgba(255, 255, 255, 0);
     &:hover{
         border:4px solid rgba(168, 168, 168, 0.8);
     }
@@ -53,4 +54,7 @@ body{
 .title{
     font-size: 24px;
     color: black;
+}
+h1{
+    font-size: 28px;
 }

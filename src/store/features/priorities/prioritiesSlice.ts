@@ -1,31 +1,29 @@
 import {ActionReducerMapBuilder, createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {Notes, Prisma} from "@prisma/client";
 import {RootState} from "@/store/store";
-import {NotesDto} from "@/types/dto";
+import {NotesDto, PriorityDto} from "@/types/dto";
 
-export const notesData = createAsyncThunk(
-"data/notes",
+export const priorityData = createAsyncThunk(
+"data/priorities",
 async ()=>{
-    console.log('thunk')
-        const response = await fetch(`/api/notes`)
-        const data:NotesDto[] =await response.json()
+        const response = await fetch(`/api/priorities`)
+        const data:PriorityDto[] =await response.json()
         return data
     }
 )
-interface INotesState {
-    notes: NotesDto[];
+interface IPriorityState {
+    priorities: PriorityDto[];
 }
-const notesSlice = createSlice({
-    name: "notes",
+const prioritiesSlice = createSlice({
+    name: "priorities",
     initialState: {
-        notes:[]
-    } as INotesState,
+        priorities:[]
+    } as IPriorityState,
     reducers:{},
     extraReducers:(builder)=>{
-        builder.addCase(notesData.fulfilled,(state,action)=>{
-            state.notes= action.payload as unknown as NotesDto[]
+        builder.addCase(priorityData.fulfilled,(state,action)=>{
+            state.priorities = action.payload as unknown as PriorityDto[]
         })
     }
 })
-export default notesSlice.reducer;
-export const selectNotes = (state:RootState)=>state.notes;
+export default prioritiesSlice.reducer;
+export const selectPriorities = (state:RootState)=>state.priorities;
