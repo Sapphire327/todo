@@ -16,19 +16,23 @@ const LoginForm:FC = () => {
     const [error,setError] = useState<string|null>()
     const { data } = useSession()
     const router = useRouter()
-    useEffect(()=>{
-        if(data)router.push('/')
-    },[data])
+    useEffect(() => {
+        if(data)setTimeout(()=>{
+         router.push('/')
+        },2000)
+    }, [data])
     const onSubmit: SubmitHandler<FormValues> =async (data) => {
         const login = data.login
         const password =data.password
         const result = await signIn('credentials', {
-            redirect: false,
+            redirect:false,
             login,
             password,
         });
         if (result&&result.error) {
             setError(result.error);
+        }else{
+
         }
     }
 

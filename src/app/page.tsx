@@ -17,9 +17,12 @@ import {
     useUpdateNoteMutation
 } from "@/store/features/notes/notesApiSlice";
 import ConfirmDeletion from "@/components/Forms/ConfirmDeletion/ConfirmDeletion";
+import {router} from "next/client";
+import {useRouter} from "next/navigation";
 
 export default function Home() {
   const { data } = useSession()
+    const router = useRouter()
   const dispatch = useDispatch<AppDispatch>();
   const {notes} = useSelector(selectNotes);
   const [createNote,{isSuccess}] = useCreateNoteMutation();
@@ -30,9 +33,14 @@ export default function Home() {
   const [isCreate,setIsCreate] = useState(true)
   const [selectedNote,setSelectedNote] = useState<number>(-1)
   useEffect(() => {
-    dispatch(notesData())
-      dispatch(priorityData())
+      if(data) {
+          dispatch(notesData())
+          dispatch(priorityData())
+      }
   }, []);
+    useEffect(() => {
+        if(!data)router.push('/sign-in')
+    }, [data]);
   const CreateNote=async(note:NotesCreateDto)=>{
       await createNote(note)
       dispatch(notesData())
@@ -57,7 +65,8 @@ export default function Home() {
         setSelectedNote(index)
         setIsOpenDeletePopup(true)
     },[])
-  return (
+    if(!data)return <div></div>
+    else return (
       <div className='container'>
         <h1 className={styles.greeting}>Здравствуйте, {data?.user.name}</h1>
         <div className={styles.btnWrap}>

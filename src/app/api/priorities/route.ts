@@ -1,11 +1,5 @@
-import {NotesCreateDto, NotesDto, NotesUpdateDto, PriorityDto, UserDto} from "@/types/dto";
-import {Notes, PrismaClient} from "@prisma/client";
-import bcrypt from 'bcrypt'
-import {getSession} from "next-auth/react";
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
-import {Simulate} from "react-dom/test-utils";
-import select = Simulate.select;
+import { PriorityDto, UserDto} from "@/types/dto";
+import {PrismaClient} from "@prisma/client";
 
 const prisma = new PrismaClient();
 

@@ -24,9 +24,9 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     pages: {
-        signIn: '/sign-in',
+        signIn: '/sign-in/',
         signOut:'/sign-out',
-        error:undefined
+        error:'/sign-in'
     },
     session: {
         strategy:'jwt'
@@ -49,5 +49,7 @@ export const authOptions: NextAuthOptions = {
     }
     ,secret: process.env.NEXTAUTH_SECRET,
 }
-export const handler =  NextAuth(authOptions);
+
+
+const handler = NextAuth(authOptions);
 export {handler as GET,handler as POST};

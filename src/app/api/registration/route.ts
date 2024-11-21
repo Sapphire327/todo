@@ -1,9 +1,6 @@
 import {UserDto} from "@/types/dto";
 import {PrismaClient} from "@prisma/client";
 import bcrypt from 'bcrypt'
-import {getSession} from "next-auth/react";
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
 const prisma = new PrismaClient();
 
