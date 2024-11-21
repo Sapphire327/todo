@@ -45,3 +45,12 @@ export async function PUT(request: Request,response:Response) {
     })
     return Response.json(notes,{status:200})
 }
+export async function DELETE(request: Request,response:Response) {
+    const session= await getServerSession (authOptions);
+    const note: { id:number } = await request.json()
+    if(!session)return Response.json({errorMessage:'Нужна авторизация'},{status: 401})
+    const notes = await prisma.notes.delete({
+        where:{id:note.id,usersId:session.user.id},
+    })
+    return Response.json(notes,{status:200})
+}

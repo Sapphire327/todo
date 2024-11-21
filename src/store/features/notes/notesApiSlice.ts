@@ -19,9 +19,16 @@ export const notesApi = createApi({
                 body:{...dto},
             })
         }),
+        removeNote: builder.mutation<void, { id:number }>({
+            query:dto=>({
+                url:'/api/notes',
+                method:'DELETE',
+                body:{...dto},
+            })
+        }),
     }),
 })
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const {  useCreateNoteMutation,useUpdateNoteMutation} = notesApi
+export const {  useCreateNoteMutation,useUpdateNoteMutation,useRemoveNoteMutation} = notesApi

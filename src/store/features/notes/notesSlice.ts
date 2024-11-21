@@ -6,7 +6,6 @@ import {NotesDto} from "@/types/dto";
 export const notesData = createAsyncThunk(
 "data/notes",
 async ()=>{
-    console.log('thunk')
         const response = await fetch(`/api/notes`)
         const data:NotesDto[] =await response.json()
         return data

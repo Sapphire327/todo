@@ -4,14 +4,19 @@ import styles from "./page.module.css";
 import {useSession,getSession} from "next-auth/react";
 import {useDispatch, useSelector} from "react-redux";
 import {notesData, selectNotes} from "@/store/features/notes/notesSlice";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {AppDispatch} from "@/store/store";
 import Note from "@/components/Note/Note";
 import NotesForm from "@/components/Forms/NotesForm/NotesForm";
 import Popup from "reactjs-popup";
 import {priorityData} from "@/store/features/priorities/prioritiesSlice";
 import {NotesCreateDto, NotesDto, NotesUpdateDto} from "@/types/dto";
-import {useCreateNoteMutation, useUpdateNoteMutation} from "@/store/features/notes/notesApiSlice";
+import {
+    useCreateNoteMutation,
+    useRemoveNoteMutation,
+    useUpdateNoteMutation
+} from "@/store/features/notes/notesApiSlice";
+import ConfirmDeletion from "@/components/Forms/ConfirmDeletion/ConfirmDeletion";
 
 export default function Home() {
   const { data } = useSession()
@@ -19,7 +24,9 @@ export default function Home() {
   const {notes} = useSelector(selectNotes);
   const [createNote,{isSuccess}] = useCreateNoteMutation();
   const [updateNote] = useUpdateNoteMutation();
+  const [deleteNote] = useRemoveNoteMutation()
   const [isOpenPopup,setIsOpenPopup] = useState(false)
+  const [isOpenDeletePopup,setIsOpenDeletePopup] = useState(false)
   const [isCreate,setIsCreate] = useState(true)
   const [selectedNote,setSelectedNote] = useState<number>(-1)
   useEffect(() => {
@@ -27,7 +34,6 @@ export default function Home() {
       dispatch(priorityData())
   }, []);
   const CreateNote=async(note:NotesCreateDto)=>{
-      console.log(note.prioritiesId)
       await createNote(note)
       dispatch(notesData())
       setIsOpenPopup(false)
@@ -37,12 +43,20 @@ export default function Home() {
       dispatch(notesData())
       setIsOpenPopup(false)
   }
-  const OpenChangeNote=(index:number)=>{
+    const DeleteNote=async()=>{
+        await deleteNote({id:notes[selectedNote].id})
+        dispatch(notesData())
+        setIsOpenDeletePopup(false)
+    }
+  const OpenChangeNote=useCallback((index:number)=>{
       setIsCreate(false)
       setSelectedNote(index)
       setIsOpenPopup(true)
-  }
-  const DeleteNote=()=>{}
+  },[]);
+    const DeleteChangeNote=useCallback((index:number)=>{
+        setSelectedNote(index)
+        setIsOpenDeletePopup(true)
+    },[])
   return (
       <div className='container'>
         <h1 className={styles.greeting}>Здравствуйте, {data?.user.name}</h1>
@@ -53,13 +67,17 @@ export default function Home() {
         <main className={styles.main}>
           <ul className={styles.notesList}>
             {notes.map((e,index) => {
-              return <li key={e.id}><Note updateNote={OpenChangeNote} index={index} note={e}/></li>
+              return <li key={e.id}><Note deleteNote={DeleteChangeNote} updateNote={OpenChangeNote} index={index} note={e}/></li>
             })}
           </ul>
         </main>
           <Popup open={isOpenPopup} onClose={()=>setIsOpenPopup(false)} position="center center" modal nested lockScroll
                  overlayStyle={{background: 'rgba(107,107,107,0.58)'}}>
               <NotesForm note={notes[selectedNote]} isCreate={isCreate} updateNote={UpdateNote} createNote={CreateNote}/>
+          </Popup>
+          <Popup open={isOpenDeletePopup} onClose={()=>setIsOpenDeletePopup(false)} position="center center" modal nested lockScroll
+                 overlayStyle={{background: 'rgba(107,107,107,0.58)'}}>
+              <ConfirmDeletion deleteNote={DeleteNote}/>
           </Popup>
       </div>
   );

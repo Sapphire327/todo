@@ -20,9 +20,8 @@ interface props{
 // ...(!isCreate&& {defaultValues:note})
 
 const NotesForm:FC<props> = ({createNote,isCreate,updateNote,note}) => {
-    const defaultVal = isCreate?null:note;
+    const defaultVal = isCreate?{}:note;
     const { register, handleSubmit,formState: { errors } } = useForm<NotesCreateDto>({defaultValues:defaultVal});
-
     const {priorities} = useSelector(selectPriorities)
     const onSubmit: SubmitHandler<NotesCreateDto> =async (data) => {
         data.prioritiesId = parseInt(data.prioritiesId.toString())
@@ -36,12 +35,13 @@ const NotesForm:FC<props> = ({createNote,isCreate,updateNote,note}) => {
             <h2 className='title'>{isCreate?'Добавить заметку':'Изменить заметку'}</h2>
             <div className={styles.formBody}>
                 <input className='input' placeholder='Заметка' type='nickname' {...register("text", {required: true})} />
-                <select {...register("prioritiesId", {required: true})}>
+                <p>Приоритет:</p>
+                <select className={styles.select} {...register("prioritiesId", {required: true})}>
                     {priorities.map((prioritet)=> {
                         return <option key={prioritet.id} value={prioritet.id}>{prioritet.name}</option>
                     })}
                 </select>
-                <input type="submit" className={clsx('button',styles.formBtn)} value={isCreate?'Добавить заметку':'Изменить заметку'}/>
+                <input type="submit" className={clsx('button',styles.formBtn)} value={isCreate?'Добавить заметку':'Внести изменения'}/>
             </div>
         </form>
     )
