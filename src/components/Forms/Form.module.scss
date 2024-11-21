@@ -1,0 +1,24 @@
+.form{
+  background-color: rgba(235, 230, 230, 0.27);
+  max-width: 500px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 350px;
+  margin: 50px auto auto;
+  gap: 20px;
+  &>.formBody{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 65%;
+  }
+  &>.error{
+
+  }
+}
+.formBtn{
+
+}

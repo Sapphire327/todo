@@ -9,7 +9,7 @@ export const registrationApi = createApi({
             query:dto=>({
                 url:'/api/registration',
                 method:'POST',
-                body:{...dto}
+                body:{...dto},
             })
         }),
     }),
