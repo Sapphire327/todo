@@ -8,9 +8,8 @@ const Page:FC = () => {
     const router = useRouter()
     const { data } = useSession()
     useEffect(() => {
-        if(data)setTimeout(()=>{
+        if(data)
             router.push('/')
-        },2000)
     }, [data])
     return (
         <div className='container'>
